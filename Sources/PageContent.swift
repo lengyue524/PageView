@@ -41,15 +41,13 @@ struct VerticalPageStack<Pages>: View where Pages: View {
     }
 }
 
-struct PageContent<Stack, Control>: View where Stack: View, Control: View {
+struct PageContent<Stack>: View where Stack: View {
     @Binding var selectedPage: Int
     @Binding var pageOffset: CGFloat
     @Binding var isGestureActive: Bool
     let compositeView: Stack
     let childCount: Int
-    let pageControlBuilder: (Int, Binding<Int>) -> Control
     let axis: Axis
-    let alignment: Alignment
     let geometry: GeometryProxy
     private let baseOffset: CGFloat
     
@@ -58,21 +56,17 @@ struct PageContent<Stack, Control>: View where Stack: View, Control: View {
         pageOffset: Binding<CGFloat>,
         isGestureActive: Binding<Bool>,
         axis: Axis,
-        alignment: Alignment,
         geometry: GeometryProxy,
         childCount: Int,
-        compositeView: Stack,
-        pageControlBuilder: @escaping (Int, Binding<Int>) -> Control
+        compositeView: Stack
     ) {
         self._selectedPage = selectedPage
         self._pageOffset = pageOffset
         self._isGestureActive = isGestureActive
         self.compositeView = compositeView
         self.childCount = childCount
-        self.pageControlBuilder = pageControlBuilder
         self.geometry = geometry
         self.axis = axis
-        self.alignment = alignment
         if axis == .horizontal {
             self.baseOffset = (geometry.size.width / 2) * CGFloat(childCount - 1)
         } else {
@@ -81,7 +75,6 @@ struct PageContent<Stack, Control>: View where Stack: View, Control: View {
     }
     
     var body: some View {
-        let pageControl = pageControlBuilder(childCount, $selectedPage)
         
         return ZStack(alignment: .center) {
             compositeView
@@ -90,7 +83,6 @@ struct PageContent<Stack, Control>: View where Stack: View, Control: View {
                 .frame(width: geometry.size.width, height: geometry.size.height)
                 .disabled(true)
                 .foregroundColor(.clear)
-                .overlay(pageControl, alignment: alignment)
         }.frame(width: geometry.size.width, height: geometry.size.height)
     }
     

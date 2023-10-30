@@ -79,18 +79,10 @@ final class PageScrollState: ObservableObject {
     // MARK: Gesture States
     
     func horizontalGestureState(pageCount: Int) -> GestureState<TransactionInfo> {
-        return GestureState(initialValue: TransactionInfo()) { [weak self] (info, _) in
-            let width = info.geometryProxy.size.width
-            let dragValue = info.dragValue!
-            self?.horizontalDragEnded(dragValue, viewCount: pageCount, pageWidth: width)
-        }
+        return GestureState(initialValue: TransactionInfo())
     }
     
     func verticalGestureState(pageCount: Int) -> GestureState<TransactionInfo> {
-        return GestureState(initialValue: TransactionInfo()) { [weak self] (info, _) in
-            let height = info.geometryProxy.size.height
-            let dragValue = info.dragValue!
-            self?.verticalDragEnded(dragValue, viewCount: pageCount, pageHeight: height)
-        }
+        return GestureState(initialValue: TransactionInfo())
     }
 }
